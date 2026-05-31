@@ -89,7 +89,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@example.com"
-              autocomplete="email"
+              autoComplete="email"
             />
           </div>
 

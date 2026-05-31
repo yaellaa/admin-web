@@ -25,7 +25,7 @@ export default function AdminLayout() {
           </div>
           <div className="header-right">
             <Link to="/profile" className="user-info user-info-link">
-              👤 {userEmail || 'Profile'}
+              {userEmail || 'Profile'}
             </Link>
           </div>
         </header>

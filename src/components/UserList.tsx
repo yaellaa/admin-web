@@ -19,6 +19,7 @@ export default function UserList() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -101,6 +102,20 @@ export default function UserList() {
     }
   }
 
+  const filterUsers = (usersToFilter: User[]) => {
+    if (!searchQuery.trim()) return usersToFilter
+    const query = searchQuery.toLowerCase()
+    return usersToFilter.filter(
+      (user) =>
+        (user.firstName?.toLowerCase().includes(query)) ||
+        (user.lastName?.toLowerCase().includes(query)) ||
+        (user.email?.toLowerCase().includes(query)) ||
+        (user.contactNum?.toLowerCase().includes(query)) ||
+        (user.phone?.toLowerCase().includes(query)) ||
+        (user.id?.toLowerCase().includes(query))
+    )
+  }
+
   return (
     <div className="page-content">
       <div className="content-header">
@@ -114,8 +129,29 @@ export default function UserList() {
 
         {!loading && !error && (
           <div className="user-table-wrapper">
-            {users.length === 0 ? (
-              <p>No users found.</p>
+            <div style={{ marginBottom: 16 }}>
+              <input
+                type="text"
+                placeholder="Search by name, email, or phone..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  maxWidth: 400,
+                  padding: '10px 12px',
+                  borderRadius: 6,
+                  border: '1px solid #e5e7eb',
+                  fontSize: 14,
+                  boxSizing: 'border-box',
+                }}
+              />
+              <p style={{ marginTop: 8, color: '#666', fontSize: 13 }}>
+                Showing {filterUsers(users).length} of {users.length} users
+              </p>
+            </div>
+
+            {filterUsers(users).length === 0 ? (
+              <p>{searchQuery ? 'No users match your search.' : 'No users found.'}</p>
             ) : (
               <table className="user-table">
                 <thead>
@@ -129,7 +165,7 @@ export default function UserList() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => (
+                  {filterUsers(users).map((u) => (
                     <tr key={u.id}>
                       <td>
                         {u.profileImage ? (
@@ -196,20 +232,20 @@ export default function UserList() {
                           editingId === u.id ? (
                             <>
                               <button className="save-btn" onClick={() => saveEdit(u.id)}>
-                                💾 Save
+                                Save
                               </button>
                               <button className="cancel-btn" onClick={cancelEdit}>
-                                ✖️ Cancel
+                                Cancel
                               </button>
                             </>
                           ) : (
                             <button className="edit-btn" onClick={() => startEdit(u)}>
-                              ✏️ Edit
+                              Edit
                             </button>
                           )
                         ) : (
                           <button className="delete-btn" onClick={() => handleDelete(u.id)}>
-                            🗑️ Delete
+                            Delete
                           </button>
                         )}
                       </td>

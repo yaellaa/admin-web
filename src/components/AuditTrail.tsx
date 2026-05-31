@@ -21,6 +21,7 @@ export default function AuditTrail() {
   const [userLogs, setUserLogs] = useState<AuditEntry[]>([])
   const [adminLogs, setAdminLogs] = useState<AuditEntry[]>([])
   const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const fetch = async () => {
@@ -110,6 +111,18 @@ export default function AuditTrail() {
     fetch()
   }, [])
 
+  const filterLogs = (logs: AuditEntry[]) => {
+    if (!searchQuery.trim()) return logs
+    const query = searchQuery.toLowerCase()
+    return logs.filter(
+      (log) =>
+        (log.userName?.toLowerCase().includes(query)) ||
+        (log.userId?.toLowerCase().includes(query)) ||
+        (log.action?.toLowerCase().includes(query)) ||
+        (log.details?.toLowerCase().includes(query))
+    )
+  }
+
   return (
     <div className="page-content">
       <div className="content-header">
@@ -123,85 +136,105 @@ export default function AuditTrail() {
 
         {!loading && !error && (
           <>
-            <div style={{ marginBottom: 16 }}>
+            <div style={{ marginBottom: 20, display: 'flex', gap: 10 }}>
               <button
-                className={`edit-btn ${tab === 'user' ? 'active' : ''}`}
+                className={`tab-btn ${tab === 'user' ? 'tab-btn-active' : ''}`}
                 onClick={() => setTab('user')}
-                style={{ marginRight: 8 }}
               >
-                🧾 User Logs ({userLogs.length})
+                User Logs ({filterLogs(userLogs).length})
               </button>
 
               {currentUserIsAdmin && (
                 <button
-                  className={`edit-btn ${tab === 'admin' ? 'active' : ''}`}
+                  className={`tab-btn ${tab === 'admin' ? 'tab-btn-active' : ''}`}
                   onClick={() => setTab('admin')}
                 >
-                  🗂️ Admin Logs ({adminLogs.length})
+                  Admin Logs ({filterLogs(adminLogs).length})
                 </button>
               )}
             </div>
 
+            <div style={{ marginBottom: 24 }}>
+              <input
+                type="text"
+                placeholder="Search by user, action, or details..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="audit-search-input"
+              />
+            </div>
+
+            <div className="audit-trail-container">
+
             {tab === 'user' && (
-              <div>
-                {userLogs.length === 0 ? (
-                  <p>No user logs found.</p>
+              <>
+                {filterLogs(userLogs).length === 0 ? (
+                  <div className="empty-state">
+                    <p>{searchQuery ? 'No results found.' : 'No user logs found.'}</p>
+                  </div>
                 ) : (
-                  <table className="user-table">
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {userLogs.map((e) => (
-                        <tr key={e.id}>
-                          <td>{new Date(e.timestamp || 0).toLocaleString()}</td>
-                          <td>{e.userName || e.userId || '—'}</td>
-                          <td>{e.action}</td>
-                          <td style={{ maxWidth: 400, overflowWrap: 'break-word' }}>{e.details || '—'}</td>
+                  <div className="audit-table-wrapper">
+                    <table className="audit-table">
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>User</th>
+                          <th>Action</th>
+                          <th>Details</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {filterLogs(userLogs).map((e) => (
+                          <tr key={e.id} className="audit-row">
+                            <td className="time-cell">{new Date(e.timestamp || 0).toLocaleString()}</td>
+                            <td className="user-cell"><span className="badge">{e.userName || e.userId || '—'}</span></td>
+                            <td className="action-cell">{e.action}</td>
+                            <td className="details-cell">{e.details || '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
-              </div>
+              </>
             )}
 
             {tab === 'admin' && currentUserIsAdmin && (
-              <div>
-                {adminLogs.length === 0 ? (
-                  <p>No admin logs found.</p>
+              <>
+                {filterLogs(adminLogs).length === 0 ? (
+                  <div className="empty-state">
+                    <p>{searchQuery ? 'No results found.' : 'No admin logs found.'}</p>
+                  </div>
                 ) : (
-                  <table className="user-table">
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>Admin</th>
-                        <th>Action</th>
-                        <th>Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {adminLogs.map((e) => (
-                        <tr key={e.id}>
-                          <td>{new Date(e.timestamp || 0).toLocaleString()}</td>
-                          <td>{e.userName || e.userId || '—'}</td>
-                          <td>{e.action}</td>
-                          <td style={{ maxWidth: 400, overflowWrap: 'break-word' }}>{e.details || '—'}</td>
+                  <div className="audit-table-wrapper">
+                    <table className="audit-table">
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>Admin</th>
+                          <th>Action</th>
+                          <th>Details</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {filterLogs(adminLogs).map((e) => (
+                          <tr key={e.id} className="audit-row">
+                            <td className="time-cell">{new Date(e.timestamp || 0).toLocaleString()}</td>
+                            <td className="admin-cell"><span className="admin-badge-small">{e.userName || e.userId || '—'}</span></td>
+                            <td className="action-cell">{e.action}</td>
+                            <td className="details-cell">{e.details || '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
-              </div>
+              </>
             )}
+            </div>
 
             {!currentUserIsAdmin && (
-              <p style={{ color: '#888', marginTop: 12 }}>Admin logs are hidden — admin privileges required.</p>
+              <p className="admin-disclaimer">Admin logs are hidden — admin privileges required.</p>
             )}
           </>
         )}

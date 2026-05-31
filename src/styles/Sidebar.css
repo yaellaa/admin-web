@@ -1,6 +1,6 @@
 .sidebar {
   width: 260px;
-  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  background: linear-gradient(180deg, #1e1f43 0%, #2B3381 100%);
   color: white;
   display: flex;
   flex-direction: column;
@@ -9,19 +9,24 @@
   left: 0;
   top: 0;
   overflow-y: auto;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 10px rgba(43, 51, 129, 0.15);
 }
 
 .sidebar-header {
   padding: 24px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
 }
 
-.sidebar-header h2 {
-  margin: 0 0 4px 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
+.sidebar-header img {
+  max-width: 100%;
+  height: auto;
+  max-height: 60px;
+  object-fit: contain;
+  filter: brightness(1.1);
 }
 
 .sidebar-subtitle {
@@ -65,9 +70,9 @@
 }
 
 .nav-link.active {
-  background-color: rgba(102, 126, 234, 0.2);
-  color: #667eea;
-  border-left-color: #667eea;
+  background-color: rgba(43, 51, 129, 0.3);
+  color: #a8c8ff;
+  border-left-color: #a8c8ff;
 }
 
 .sidebar-footer {
@@ -89,8 +94,8 @@
 }
 
 .logout-btn:hover {
-  background-color: #e74c3c;
-  border-color: #c0392b;
+  background-color: #ff6b6b;
+  border-color: #ff5252;
 }
 
 /* Scrollbar styling */

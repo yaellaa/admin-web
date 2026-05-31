@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Login.css'
-import { findUserByEmail } from '../firebase'
+import { findUserByEmail, auth } from '../firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -36,7 +37,7 @@ export default function Login() {
         return
       }
 
-      const adminFlag = user.admin
+      const adminFlag = user.adsmin
       // admin can be number or string in the DB
       const isAdmin = adminFlag === 1 || adminFlag === '1' || adminFlag === true
 
@@ -45,24 +46,37 @@ export default function Login() {
         return
       }
 
-      // At this point user is allowed to login as admin
+      // Sign in with Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+
       localStorage.setItem('isLoggedIn', 'true')
       localStorage.setItem('userEmail', email)
       localStorage.setItem('userId', user.id ?? '')
+      localStorage.setItem('firebaseUid', userCredential.user.uid)
       // notify App to re-read login state
       window.dispatchEvent(new Event('authChanged'))
       navigate('/dashboard')
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
-      setError('An error occurred while checking account')
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        setError('Invalid email or password')
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address')
+      } else {
+        setError('An error occurred while checking account')
+      }
     }
   }
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>Admin Login</h1>
-        <p className="login-subtitle">Welcome to BacoorConnect Admin</p>
+        <img 
+          src="/logos/cityconnect_horizontal_blue.png" 
+          alt="CityConnect Logo"
+          className="login-logo"
+        />
+        <p className="login-subtitle"></p>
         
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
@@ -75,6 +89,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@example.com"
+              autocomplete="email"
             />
           </div>
 
@@ -86,6 +101,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
+              autoComplete="current-password"
             />
           </div>
 
@@ -93,12 +109,6 @@ export default function Login() {
             Sign In
           </button>
         </form>
-
-        <div className="login-footer">
-          <p>Demo Credentials:</p>
-          <p>Email: <strong>admin@example.com</strong></p>
-          <p>Password: <strong>password123</strong></p>
-        </div>
       </div>
     </div>
   )

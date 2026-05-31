@@ -1,7 +1,7 @@
 .admin-container {
   display: flex;
   height: 100vh;
-  background-color: #f5f7fa;
+  background-color: #f7f5fc;
 }
 
 .main-content {
@@ -18,7 +18,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e0e6ed;
+  border-bottom: 1px solid #e8e5f5;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -40,7 +40,7 @@
   color: #666;
   font-weight: 500;
   padding: 8px 16px;
-  background-color: #f5f7fa;
+  background-color: #f7f5fc;
   border-radius: 6px;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .user-info-link:hover {
-  background-color: #ebeff5;
+  background-color: #e8e5f5;
   color: #2c3e50;
 }
 
@@ -75,13 +75,13 @@
 .user-table td {
   padding: 12px 16px;
   text-align: left;
-  border-bottom: 1px solid #e9eef5;
+  border-bottom: 1px solid #e8e5f5;
   color: #34495e;
   font-size: 14px;
 }
 
 .user-table thead th {
-  background: #f7f9fc;
+  background: #f7f5fc;
   font-weight: 600;
   color: #2c3e50;
 }
@@ -95,7 +95,7 @@
 }
 
 .error-message {
-  color: #e74c3c;
+  color: #ff6b6b;
 }
 
 .admin-badge {
@@ -109,15 +109,15 @@
 
 .admin-badge:nth-child(1) {
   /* fallback */
-  background: #95a5a6;
+  background: #2B3381;
 }
 
 .admin-badge {
-  background: #3498db;
+  background: #2B3381;
 }
 
 .delete-btn {
-  background: #e74c3c;
+  background: #ff6b6b;
   color: white;
   border: none;
   padding: 8px 10px;
@@ -127,11 +127,11 @@
 }
 
 .delete-btn:hover {
-  background: #c0392b;
+  background: #ff5252;
 }
 
 .edit-btn {
-  background: #3498db;
+  background: #2B3381;
   color: white;
   border: none;
   padding: 8px 10px;
@@ -140,8 +140,12 @@
   font-weight: 600;
 }
 
+.edit-btn:hover {
+  background: #1e1f43;
+}
+
 .save-btn {
-  background: #2ecc71;
+  background: #00b371;
   color: white;
   border: none;
   padding: 8px 10px;
@@ -151,14 +155,22 @@
   margin-right: 8px;
 }
 
+.save-btn:hover {
+  background: #00a062;
+}
+
 .cancel-btn {
-  background: #95a5a6;
+  background: #6b7280;
   color: white;
   border: none;
   padding: 8px 10px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+}
+
+.cancel-btn:hover {
+  background: #4b5563;
 }
 
 .user-table input {
@@ -225,12 +237,12 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2B3381 0%, #1e1f43 100%);
   color: white;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(43, 51, 129, 0.3);
   transition: transform 0.3s ease;
 }
 
@@ -267,6 +279,32 @@
 
 .page-content::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+
+/* Map styling */
+.leaflet-container {
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+
+.leaflet-popup-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.leaflet-popup-content p {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.custom-marker {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 /* Responsive design */
@@ -320,4 +358,168 @@
   .stat-number {
     font-size: 24px;
   }
+}
+
+/* Modern Audit Trail Styles */
+.tab-btn {
+  background: #f0f0f5;
+  color: #666;
+  border: 2px solid transparent;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tab-btn:hover {
+  background: #e8e5f5;
+  color: #2B3381;
+}
+
+.tab-btn-active {
+  background: linear-gradient(135deg, #2B3381 0%, #1e1f43 100%);
+  color: white;
+  border-color: #2B3381;
+  box-shadow: 0 4px 12px rgba(43, 51, 129, 0.2);
+}
+
+.audit-search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 14px 18px;
+  border: 2px solid #e8e5f5;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+  color: #333;
+}
+
+.audit-search-input:focus {
+  outline: none;
+  border-color: #2B3381;
+  box-shadow: 0 0 0 4px rgba(43, 51, 129, 0.1);
+  background: white;
+}
+
+.audit-search-input::placeholder {
+  color: #999;
+}
+
+.audit-trail-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.audit-table-wrapper {
+  overflow-x: auto;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-table thead {
+  background: linear-gradient(90deg, #f7f5fc 0%, #f0f0f5 100%);
+  border-bottom: 2px solid #e8e5f5;
+}
+
+.audit-table th {
+  padding: 18px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.audit-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f5;
+  color: #34495e;
+  font-size: 14px;
+}
+
+.audit-row {
+  transition: background-color 0.2s ease;
+}
+
+.audit-row:hover {
+  background-color: #f9f8fd;
+}
+
+.audit-row:last-child td {
+  border-bottom: none;
+}
+
+.time-cell {
+  font-weight: 500;
+  color: #2B3381;
+  font-size: 13px;
+  min-width: 180px;
+}
+
+.user-cell, .admin-cell {
+  min-width: 140px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #e8e5f5;
+  color: #2B3381;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.admin-badge-small {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #2B3381 0%, #4a5aa8 100%);
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(43, 51, 129, 0.2);
+}
+
+.action-cell {
+  font-weight: 600;
+  color: #2B3381;
+  min-width: 120px;
+}
+
+.details-cell {
+  color: #666;
+  max-width: 400px;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+}
+
+.admin-disclaimer {
+  color: #2B3381;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px;
+  background: #f0f0f5;
+  border-radius: 8px;
+  border-left: 4px solid #2B3381;
 }

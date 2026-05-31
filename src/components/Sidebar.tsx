@@ -1,22 +1,39 @@
 import { Link, useLocation } from 'react-router-dom'
 import '../styles/Sidebar.css'
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase'
 
 export default function Sidebar() {
   const location = useLocation()
 
   const isActive = (path: string) => location.pathname === path
 
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('userEmail')
-    window.location.href = '/'
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('userEmail')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('firebaseUid')
+      window.location.href = '/'
+    } catch (err) {
+      console.error('Logout error:', err)
+    }
   }
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h2>BacoorConnect</h2>
-        <p className="sidebar-subtitle">Admin Panel</p>
+        <img 
+          src="/logos/cityconnect_horizontal_white.png" 
+          alt="CityConnect Logo"
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+            maxHeight: 60,
+            objectFit: 'contain',
+          }}
+        />
       </div>
 
       <nav className="sidebar-nav">
@@ -26,7 +43,7 @@ export default function Sidebar() {
               to="/dashboard"
               className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
             >
-              📊 Dashboard
+              Dashboard
             </Link>
           </li>
           <li>
@@ -34,7 +51,7 @@ export default function Sidebar() {
               to="/audit-trail"
               className={`nav-link ${isActive('/audit-trail') ? 'active' : ''}`}
             >
-              🧾 Audit Trail
+              Audit Trail
             </Link>
           </li>
           <li>
@@ -42,7 +59,7 @@ export default function Sidebar() {
               to="/report-verification"
               className={`nav-link ${isActive('/report-verification') ? 'active' : ''}`}
             >
-              ✅ Report Verification
+              Report Verification
             </Link>
           </li>
           <li>
@@ -50,7 +67,7 @@ export default function Sidebar() {
               to="/user-list"
               className={`nav-link ${isActive('/user-list') ? 'active' : ''}`}
             >
-              👥 User List
+              User List
             </Link>
           </li>
         </ul>
@@ -58,7 +75,7 @@ export default function Sidebar() {
 
       <div className="sidebar-footer">
         <button onClick={handleLogout} className="logout-btn">
-          🚪 Logout
+          Logout
         </button>
       </div>
     </aside>

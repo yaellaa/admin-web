@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getStorage } from 'firebase/storage'
 import { getDatabase, ref, query, orderByChild, equalTo, get } from 'firebase/database'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getDatabase(app)
 const storage = getStorage(app)
+const auth = getAuth(app)
 
 export async function findUserByEmail(email: string) {
   const usersRef = ref(db, 'Users')
@@ -33,4 +35,4 @@ export async function findUserByEmail(email: string) {
   return result
 }
 
-export { db, storage }
+export { db, storage, auth }

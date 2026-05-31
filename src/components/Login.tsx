@@ -37,7 +37,7 @@ export default function Login() {
         return
       }
 
-      const adminFlag = user.adsmin
+      const adminFlag = user.admin
       // admin can be number or string in the DB
       const isAdmin = adminFlag === 1 || adminFlag === '1' || adminFlag === true
 

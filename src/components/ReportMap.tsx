@@ -81,33 +81,6 @@ export default function ReportMap({ reports = [] }: ReportMapProps) {
     })
   }
 
-  // Create custom icons for different statuses
-  const createIcon = (status: string) => {
-    const color = getStatusColor(status)
-    return L.divIcon({
-      html: `
-        <div style="
-          background-color: ${color};
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          border: 3px solid white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-weight: bold;
-          font-size: 16px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        "></div>
-      `,
-      className: 'custom-marker',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
-    })
-  }
-
   if (reportsWithCoords.length === 0) {
     return (
       <div

@@ -3,6 +3,13 @@ import { getStorage } from 'firebase/storage'
 import { getDatabase, ref, query, orderByChild, equalTo, get } from 'firebase/database'
 import { getAuth } from 'firebase/auth'
 
+export type UserRecord = {
+  id: string
+  admin?: number | string | boolean
+  email?: string
+  [key: string]: unknown
+}
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -19,15 +26,15 @@ const db = getDatabase(app)
 const storage = getStorage(app)
 const auth = getAuth(app)
 
-export async function findUserByEmail(email: string) {
+export async function findUserByEmail(email: string): Promise<UserRecord | null> {
   const usersRef = ref(db, 'Users')
   const q = query(usersRef, orderByChild('email'), equalTo(email))
   const snapshot = await get(q)
   if (!snapshot.exists()) return null
 
-  let result: { id: string | null; [key: string]: any } | null = null
+  let result: UserRecord | null = null
   snapshot.forEach((child) => {
-    result = { id: child.key, ...child.val() }
+    result = { id: child.key ?? '', ...(child.val() as Record<string, unknown>) }
     // stop after first match
     return true
   })

@@ -51,7 +51,7 @@ export default function Login() {
 
       localStorage.setItem('isLoggedIn', 'true')
       localStorage.setItem('userEmail', email)
-      localStorage.setItem('userId', user.id ?? '')
+      localStorage.setItem('userId', user.id)
       localStorage.setItem('firebaseUid', userCredential.user.uid)
       // notify App to re-read login state
       window.dispatchEvent(new Event('authChanged'))

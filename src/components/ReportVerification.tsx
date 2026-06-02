@@ -150,31 +150,260 @@ export default function ReportVerification() {
             </div>
 
             {filterReports(reports).length === 0 ? (
-              <p>{searchQuery ? 'No reports match your search.' : 'No reports found.'}</p>
+              <div style={{
+                textAlign: 'center',
+                padding: '40px 20px',
+                color: '#9ca3af',
+              }}>
+                <p style={{ fontSize: 16 }}>{searchQuery ? 'No reports match your search.' : 'No reports found.'}</p>
+              </div>
             ) : (
-              filterReports(reports).map((report) => (
-                <div className="card" key={report.id} style={{ marginBottom: 20 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                    <div>
-                      <h3>{report.category || 'Report'}</h3>
-                      <p><strong>Report ID:</strong> {report.id}</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: 24 }}>
+                {filterReports(reports).map((report) => (
+                  <div 
+                    key={report.id} 
+                    style={{
+                      background: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: 12,
+                      overflow: 'hidden',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
+                      e.currentTarget.style.transform = 'translateY(-4px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    {/* Header with category and status badge */}
+                    <div style={{
+                      padding: '16px 20px',
+                      borderBottom: '1px solid #f3f4f6',
+                      background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: 12,
+                    }}>
+                      <div>
+                        <h4 style={{
+                          margin: 0,
+                          fontSize: '18px',
+                          fontWeight: '600',
+                          color: '#1f2937',
+                          textTransform: 'capitalize',
+                          marginBottom: 4,
+                        }}>
+                          {report.category || 'Report'}
+                        </h4>
+                        <p style={{
+                          margin: 0,
+                          fontSize: '12px',
+                          color: '#6b7280',
+                          fontFamily: 'monospace',
+                        }}>
+                          {report.id.substring(0, 12)}...
+                        </p>
+                      </div>
+                      <div style={{
+                        display: 'inline-block',
+                        padding: '6px 12px',
+                        borderRadius: 20,
+                        background: getStatusColor(report.status),
+                        color: '#fff',
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        textTransform: 'uppercase',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {report.status || 'Submitted'}
+                      </div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <strong style={{ fontSize: 14, color: '#666' }}>Status</strong>
-                      <div style={{ marginTop: 8 }}>
+
+                    {/* Main content */}
+                    <div style={{ padding: '20px', flex: 1 }}>
+                      {/* Description */}
+                      {report.description && (
+                        <div style={{ marginBottom: 16 }}>
+                          <p style={{ margin: '0 0 6px 0', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            Description
+                          </p>
+                          <p style={{ margin: 0, fontSize: '14px', color: '#374151', lineHeight: 1.4 }}>
+                            {report.description}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Location info grid */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+                        {report.location && (
+                          <div>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                              Location
+                            </p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#374151' }}>
+                              {report.location}
+                            </p>
+                          </div>
+                        )}
+                        {report.addressPrecision && (
+                          <div>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                              Precision
+                            </p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#374151' }}>
+                              {report.addressPrecision}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Coordinates */}
+                      {(report.latitude || report.longitude) && (
+                        <div style={{
+                          padding: 12,
+                          background: '#f9fafb',
+                          borderRadius: 8,
+                          marginBottom: 16,
+                          border: '1px solid #e5e7eb',
+                        }}>
+                          <p style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>
+                            Coordinates
+                          </p>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                            <div>
+                              <span style={{ fontSize: '11px', color: '#9ca3af' }}>Latitude</span>
+                              <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#374151', fontFamily: 'monospace' }}>
+                                {report.latitude ?? '—'}
+                              </p>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: '11px', color: '#9ca3af' }}>Longitude</span>
+                              <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#374151', fontFamily: 'monospace' }}>
+                                {report.longitude ?? '—'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Engagement stats */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+                        <div style={{
+                          padding: 12,
+                          background: '#f0fdf4',
+                          borderRadius: 8,
+                          border: '1px solid #dcfce7',
+                        }}>
+                          <p style={{ margin: 0, fontSize: '11px', color: '#6b7280', textTransform: 'uppercase' }}>Upvotes</p>
+                          <p style={{ margin: '4px 0 0 0', fontSize: '18px', fontWeight: '700', color: '#16a34a' }}>
+                            {report.upvotes ?? 0}
+                          </p>
+                        </div>
+                        <div style={{
+                          padding: 12,
+                          background: '#fef2f2',
+                          borderRadius: 8,
+                          border: '1px solid #fee2e2',
+                        }}>
+                          <p style={{ margin: 0, fontSize: '11px', color: '#6b7280', textTransform: 'uppercase' }}>Downvotes</p>
+                          <p style={{ margin: '4px 0 0 0', fontSize: '18px', fontWeight: '700', color: '#dc2626' }}>
+                            {report.downvotes ?? 0}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Timestamp */}
+                      {report.timestamp && (
+                        <div style={{ marginBottom: 16 }}>
+                          <p style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                            Submitted
+                          </p>
+                          <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
+                            {new Date(report.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* User ID */}
+                      {report.userId && (
+                        <div style={{
+                          padding: 8,
+                          background: '#eff6ff',
+                          borderRadius: 6,
+                          border: '1px solid #bfdbfe',
+                          marginBottom: 16,
+                        }}>
+                          <p style={{ margin: 0, fontSize: '11px', color: '#1e40af', fontWeight: '600' }}>
+                            User: <span style={{ fontFamily: 'monospace' }}>{report.userId.substring(0, 16)}...</span>
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Image */}
+                      {report.imageUrl && (
+                        <div style={{ marginBottom: 16 }}>
+                          <img
+                            src={report.imageUrl}
+                            alt={report.category || 'Report image'}
+                            onClick={() => setSelectedImage(report.imageUrl)}
+                            style={{
+                              width: '100%',
+                              height: 200,
+                              objectFit: 'cover',
+                              borderRadius: 8,
+                              cursor: 'pointer',
+                              transition: 'transform 0.2s ease, filter 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.transform = 'scale(1.05)'
+                              e.currentTarget.style.filter = 'brightness(0.9)'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = 'scale(1)'
+                              e.currentTarget.style.filter = 'brightness(1)'
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Actions footer */}
+                    <div style={{
+                      padding: '16px 20px',
+                      borderTop: '1px solid #f3f4f6',
+                      background: '#fafbfc',
+                      display: 'flex',
+                      gap: 8,
+                      flexDirection: 'column',
+                    }}>
+                      <div>
+                        <label style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280', display: 'block', marginBottom: 8 }}>
+                          Update Status
+                        </label>
                         <select
                           value={report.status || 'submitted'}
                           onChange={(e) => updateReportStatus(report.id, e.target.value as any)}
                           disabled={updatingStatus === report.id}
                           style={{
-                            padding: '8px 12px',
-                            borderRadius: 4,
-                            border: '2px solid #e5e7eb',
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: 6,
+                            border: `2px solid ${getStatusColor(report.status)}`,
                             backgroundColor: '#fff',
                             color: getStatusColor(report.status),
-                            fontWeight: 'bold',
+                            fontWeight: '600',
+                            fontSize: '13px',
                             cursor: updatingStatus === report.id ? 'not-allowed' : 'pointer',
                             opacity: updatingStatus === report.id ? 0.6 : 1,
+                            transition: 'all 0.2s ease',
                           }}
                         >
                           <option value="submitted">Submitted</option>
@@ -183,70 +412,39 @@ export default function ReportVerification() {
                           <option value="failed">Failed</option>
                         </select>
                       </div>
-                    </div>
-                  </div>
 
-                  <p><strong>Description:</strong> {report.description || '—'}</p>
-                  <p><strong>Location:</strong> {report.location || '—'}</p>
-                  <p><strong>Address Precision:</strong> {report.addressPrecision || '—'}</p>
-                  <p><strong>Latitude:</strong> {report.latitude ?? '—'}</p>
-                  <p><strong>Longitude:</strong> {report.longitude ?? '—'}</p>
-                  <p><strong>Upvotes:</strong> {report.upvotes ?? 0}</p>
-                  <p><strong>Downvotes:</strong> {report.downvotes ?? 0}</p>
-                  <p><strong>User ID:</strong> {report.userId || '—'}</p>
-                  <p><strong>Timestamp:</strong> {report.timestamp ? new Date(report.timestamp).toLocaleString() : '—'}</p>
-
-                  {report.imageUrl && (
-                    <div style={{ marginTop: 12 }}>
-                      <strong>Image:</strong>
-                      <div style={{ marginTop: 8 }}>
-                        <img
-                          src={report.imageUrl}
-                          alt={report.category || 'Report image'}
-                          onClick={() => setSelectedImage(report.imageUrl)}
-                          style={{ 
-                            maxWidth: '100%', 
-                            borderRadius: 8, 
-                            maxHeight: 360, 
-                            objectFit: 'cover',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s ease',
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.02)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {report.scanResults && (
-                    <div style={{ marginTop: 12 }}>
-                      <strong>Scan Results:</strong>
-                      <div style={{ marginTop: 8 }}>
+                      {report.scanResults && (
                         <button
                           className="edit-btn"
                           onClick={() => setSelectedScanResult(report.scanResults)}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: 6,
+                            border: '1px solid #e5e7eb',
+                            background: '#f3f4f6',
+                            color: '#374151',
+                            fontWeight: '600',
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#e5e7eb'
+                            e.currentTarget.style.color = '#1f2937'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#f3f4f6'
+                            e.currentTarget.style.color = '#374151'
+                          }}
                         >
-                          View full result
+                          View Scan Results
                         </button>
-                      </div>
+                      )}
                     </div>
-                  )}
-
-                  <div style={{ marginTop: 12 }}>
-                    <strong>All Details:</strong>
-                    <ul style={{ marginTop: 8, paddingLeft: 20 }}>
-                      {Object.entries(report)
-                        .filter(([key]) => key !== 'id' && key !== 'scanResults' && key !== 'status')
-                        .map(([key, value]) => (
-                          <li key={key} style={{ marginBottom: 8 }}>
-                            <strong>{key}:</strong> {typeof value === 'object' ? JSON.stringify(value) : String(value ?? '—')}
-                          </li>
-                        ))}
-                    </ul>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </>
         )}

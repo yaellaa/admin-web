@@ -128,8 +128,8 @@ export default function UserList() {
         {error && <p className="error-message">{error}</p>}
 
         {!loading && !error && (
-          <div className="user-table-wrapper">
-            <div style={{ marginBottom: 16 }}>
+          <>
+            <div style={{ marginBottom: 24 }}>
               <input
                 type="text"
                 placeholder="Search by name, email, or phone..."
@@ -137,124 +137,326 @@ export default function UserList() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  maxWidth: 400,
-                  padding: '10px 12px',
-                  borderRadius: 6,
+                  maxWidth: 500,
+                  padding: '12px 16px',
+                  borderRadius: 8,
                   border: '1px solid #e5e7eb',
                   fontSize: 14,
                   boxSizing: 'border-box',
+                  transition: 'all 0.3s ease',
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#2B3381'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(43, 51, 129, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#e5e7eb'
+                  e.currentTarget.style.boxShadow = 'none'
                 }}
               />
-              <p style={{ marginTop: 8, color: '#666', fontSize: 13 }}>
+              <p style={{ marginTop: 12, color: '#6b7280', fontSize: 13, fontWeight: 500 }}>
                 Showing {filterUsers(users).length} of {users.length} users
               </p>
             </div>
 
             {filterUsers(users).length === 0 ? (
-              <p>{searchQuery ? 'No users match your search.' : 'No users found.'}</p>
+              <div style={{
+                textAlign: 'center',
+                padding: '60px 20px',
+                color: '#9ca3af',
+              }}>
+                <p style={{ fontSize: 18, fontWeight: 500, margin: 0 }}>{searchQuery ? 'No users match your search.' : 'No users found.'}</p>
+              </div>
             ) : (
-              <table className="user-table">
-                <thead>
-                  <tr>
-                    <th>Profile</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Admin</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filterUsers(users).map((u) => (
-                    <tr key={u.id}>
-                      <td>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: 20 }}>
+                {filterUsers(users).map((u) => (
+                  <div
+                    key={u.id}
+                    style={{
+                      background: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: 12,
+                      overflow: 'hidden',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
+                      e.currentTarget.style.transform = 'translateY(-4px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    {/* Profile Header */}
+                    <div style={{
+                      padding: '20px',
+                      background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+                      borderBottom: '1px solid #f3f4f6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                    }}>
+                      <div style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: '50%',
+                        background: '#e5e7eb',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}>
                         {u.profileImage ? (
-                          editingId === u.id ? (
+                          <img
+                            src={u.profileImage}
+                            alt={u.firstName || 'User'}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div style={{
+                            width: '100%',
+                            height: '100%',
+                            background: '#d1d5db',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '20px',
+                            fontWeight: '600',
+                            color: '#6b7280',
+                          }}>
+                            {(u.firstName ?? 'U')[0].toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <h4 style={{
+                          margin: 0,
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          color: '#1f2937',
+                        }}>
+                          {editingId === u.id ? (
                             <input
                               value={editedUser.firstName ?? ''}
                               onChange={(e) => setEditedUser((s) => ({ ...s, firstName: e.target.value }))}
                               placeholder="First name"
+                              style={{
+                                width: '100%',
+                                padding: '6px 8px',
+                                borderRadius: 4,
+                                border: '1px solid #e5e7eb',
+                                fontSize: 14,
+                                marginBottom: 4,
+                              }}
                             />
                           ) : (
-                            <img src={u.profileImage} alt={u.firstName} className="avatar" />
-                          )
-                        ) : (
-                          '—'
-                        )}
-                      </td>
-                      <td>
-                        {editingId === u.id ? (
-                          <>
-                            <input
-                              value={editedUser.firstName ?? ''}
-                              onChange={(e) => setEditedUser((s) => ({ ...s, firstName: e.target.value }))}
-                              placeholder="First name"
-                            />
-                            <input
-                              value={editedUser.lastName ?? ''}
-                              onChange={(e) => setEditedUser((s) => ({ ...s, lastName: e.target.value }))}
-                              placeholder="Last name"
-                            />
-                          </>
-                        ) : (
-                          `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || '—'
-                        )}
-                      </td>
-                      <td>
+                            `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || 'User'
+                          )}
+                        </h4>
+                        <div style={{
+                          display: 'inline-block',
+                          padding: '4px 10px',
+                          borderRadius: 20,
+                          background: (u.admin === 1 || u.admin === '1' || u.admin === true) ? '#fef3c7' : '#dbeafe',
+                          color: (u.admin === 1 || u.admin === '1' || u.admin === true) ? '#92400e' : '#1e40af',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          textTransform: 'uppercase',
+                        }}>
+                          {u.admin === 1 || u.admin === '1' || u.admin === true ? 'Admin' : 'User'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ padding: '20px', flex: 1 }}>
+                      {/* Email */}
+                      <div style={{ marginBottom: 16 }}>
+                        <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                          Email
+                        </p>
                         {editingId === u.id ? (
                           <input
                             value={editedUser.email ?? ''}
                             onChange={(e) => setEditedUser((s) => ({ ...s, email: e.target.value }))}
                             placeholder="Email"
+                            style={{
+                              width: '100%',
+                              padding: '8px 10px',
+                              borderRadius: 6,
+                              border: '1px solid #e5e7eb',
+                              fontSize: 13,
+                            }}
                           />
                         ) : (
-                          u.email ?? '—'
+                          <p style={{ margin: 0, fontSize: '13px', color: '#374151', wordBreak: 'break-all' }}>
+                            {u.email ?? '—'}
+                          </p>
                         )}
-                      </td>
-                      <td>
+                      </div>
+
+                      {/* Phone */}
+                      <div style={{ marginBottom: 16 }}>
+                        <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                          Contact Number
+                        </p>
                         {editingId === u.id ? (
                           <input
                             value={editedUser.contactNum ?? editedUser.phone ?? ''}
                             onChange={(e) => setEditedUser((s) => ({ ...s, contactNum: e.target.value }))}
                             placeholder="Contact"
+                            style={{
+                              width: '100%',
+                              padding: '8px 10px',
+                              borderRadius: 6,
+                              border: '1px solid #e5e7eb',
+                              fontSize: 13,
+                            }}
                           />
                         ) : (
-                          u.contactNum ?? u.phone ?? '—'
+                          <p style={{ margin: 0, fontSize: '13px', color: '#374151', fontFamily: 'monospace' }}>
+                            {u.contactNum ?? u.phone ?? '—'}
+                          </p>
                         )}
-                      </td>
-                      <td>
-                        <span className="admin-badge">
-                          {u.admin === 1 || u.admin === '1' || u.admin === true ? 'Admin' : 'User'}
-                        </span>
-                      </td>
-                      <td>
-                        {u.admin === 1 || u.admin === '1' || u.admin === true ? (
-                          editingId === u.id ? (
-                            <>
-                              <button className="save-btn" onClick={() => saveEdit(u.id)}>
-                                Save
-                              </button>
-                              <button className="cancel-btn" onClick={cancelEdit}>
-                                Cancel
-                              </button>
-                            </>
-                          ) : (
-                            <button className="edit-btn" onClick={() => startEdit(u)}>
-                              Edit
+                      </div>
+
+                      {/* User ID */}
+                      <div>
+                        <p style={{ margin: '0 0 6px 0', fontSize: '11px', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase' }}>
+                          User ID
+                        </p>
+                        <p style={{ margin: 0, fontSize: '12px', color: '#6b7280', fontFamily: 'monospace' }}>
+                          {u.id.substring(0, 16)}...
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Actions Footer */}
+                    <div style={{
+                      padding: '16px 20px',
+                      borderTop: '1px solid #f3f4f6',
+                      background: '#fafbfc',
+                      display: 'flex',
+                      gap: 8,
+                      flexDirection: 'column',
+                    }}>
+                      {u.admin === 1 || u.admin === '1' || u.admin === true ? (
+                        editingId === u.id ? (
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <button
+                              className="save-btn"
+                              onClick={() => saveEdit(u.id)}
+                              style={{
+                                flex: 1,
+                                padding: '10px 12px',
+                                borderRadius: 6,
+                                border: 'none',
+                                background: '#10b981',
+                                color: '#fff',
+                                fontWeight: '600',
+                                fontSize: '13px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = '#059669')}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = '#10b981')}
+                            >
+                              Save
                             </button>
-                          )
+                            <button
+                              className="cancel-btn"
+                              onClick={cancelEdit}
+                              style={{
+                                flex: 1,
+                                padding: '10px 12px',
+                                borderRadius: 6,
+                                border: '1px solid #e5e7eb',
+                                background: '#f3f4f6',
+                                color: '#6b7280',
+                                fontWeight: '600',
+                                fontSize: '13px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = '#e5e7eb'
+                                e.currentTarget.style.color = '#1f2937'
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = '#f3f4f6'
+                                e.currentTarget.style.color = '#6b7280'
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         ) : (
-                          <button className="delete-btn" onClick={() => handleDelete(u.id)}>
-                            Delete
+                          <button
+                            className="edit-btn"
+                            onClick={() => startEdit(u)}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              borderRadius: 6,
+                              border: '1px solid #3b82f6',
+                              background: '#eff6ff',
+                              color: '#1e40af',
+                              fontWeight: '600',
+                              fontSize: '13px',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#3b82f6'
+                              e.currentTarget.style.color = '#fff'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#eff6ff'
+                              e.currentTarget.style.color = '#1e40af'
+                            }}
+                          >
+                            Edit
                           </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        )
+                      ) : (
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(u.id)}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: 6,
+                            border: '1px solid #ef4444',
+                            background: '#fef2f2',
+                            color: '#dc2626',
+                            fontWeight: '600',
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#ef4444'
+                            e.currentTarget.style.color = '#fff'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#fef2f2'
+                            e.currentTarget.style.color = '#dc2626'
+                          }}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>

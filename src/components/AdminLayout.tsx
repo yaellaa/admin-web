@@ -21,7 +21,7 @@ export default function AdminLayout() {
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-left">
-            <h1>BacoorConnect Admin</h1>
+            <h1>CityConnect Admin</h1>
           </div>
           <div className="header-right">
             <Link to="/profile" className="user-info user-info-link">

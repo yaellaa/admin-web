@@ -3,21 +3,21 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 interface StatusDistributionPieProps {
   submitted: number
   pending: number
-  success: number
-  failed: number
+  resolved: number
+  dismissed: number
 }
 
 export default function StatusDistributionPie({
   submitted,
   pending,
-  success,
-  failed,
+  resolved,
+  dismissed,
 }: StatusDistributionPieProps) {
   const data = [
     { name: 'Submitted', value: submitted, fill: '#2B3381' },
     { name: 'Pending', value: pending, fill: '#ff9500' },
-    { name: 'Success', value: success, fill: '#00b371' },
-    { name: 'Failed', value: failed, fill: '#ff6b6b' },
+    { name: 'Resolved', value: resolved, fill: '#00b371' },
+    { name: 'Dismissed', value: dismissed, fill: '#ff6b6b' },
   ]
 
   const hasData = data.some((item) => item.value > 0)

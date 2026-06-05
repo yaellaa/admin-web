@@ -9,8 +9,8 @@ interface DashboardStats {
   totalReports: number
   submittedReports: number
   pendingReports: number
-  successReports: number
-  failedReports: number
+  resolvedReports: number
+  dismissedReports: number
   totalUsers: number
   adminUsers: number
   regularUsers: number
@@ -24,8 +24,8 @@ export default function Dashboard() {
     totalReports: 0,
     submittedReports: 0,
     pendingReports: 0,
-    successReports: 0,
-    failedReports: 0,
+    resolvedReports: 0,
+    dismissedReports: 0,
     totalUsers: 0,
     adminUsers: 0,
     regularUsers: 0,
@@ -46,8 +46,8 @@ export default function Dashboard() {
         let totalReports = 0
         let submittedReports = 0
         let pendingReports = 0
-        let successReports = 0
-        let failedReports = 0
+        let resolvedReports = 0
+        let dismissedReports = 0
         const recentReportsList: any[] = []
         const mapReportsList: any[] = []
 
@@ -58,8 +58,8 @@ export default function Dashboard() {
             const status = report.status || 'submitted'
             if (status === 'submitted') submittedReports++
             else if (status === 'pending') pendingReports++
-            else if (status === 'success') successReports++
-            else if (status === 'failed') failedReports++
+            else if (status === 'resolved') resolvedReports++
+            else if (status === 'dismissed') dismissedReports++
 
             const reportData = {
               id: key,
@@ -125,8 +125,8 @@ export default function Dashboard() {
           totalReports,
           submittedReports,
           pendingReports,
-          successReports,
-          failedReports,
+          resolvedReports,
+          dismissedReports,
           totalUsers,
           adminUsers,
           regularUsers,
@@ -151,9 +151,9 @@ export default function Dashboard() {
         return '#2B3381'
       case 'pending':
         return '#ff9500'
-      case 'success':
+      case 'resolved':
         return '#00b371'
-      case 'failed':
+      case 'dismissed':
         return '#ff6b6b'
       default:
         return '#6b7280'
@@ -218,8 +218,8 @@ export default function Dashboard() {
                     color: 'white',
                   }}
                 >
-                  <h4>Success</h4>
-                  <p className="stat-number">{stats.successReports}</p>
+                  <h4>Resolved</h4>
+                  <p className="stat-number">{stats.resolvedReports}</p>
                 </div>
 
                 <div
@@ -229,8 +229,8 @@ export default function Dashboard() {
                     color: 'white',
                   }}
                 >
-                  <h4>Failed</h4>
-                  <p className="stat-number">{stats.failedReports}</p>
+                  <h4>Dismissed</h4>
+                  <p className="stat-number">{stats.dismissedReports}</p>
                 </div>
               </div>
 
@@ -241,8 +241,8 @@ export default function Dashboard() {
                   <StatusDistributionPie
                     submitted={stats.submittedReports}
                     pending={stats.pendingReports}
-                    success={stats.successReports}
-                    failed={stats.failedReports}
+                    resolved={stats.resolvedReports}
+                    dismissed={stats.dismissedReports}
                   />
                 </div>
               </div>

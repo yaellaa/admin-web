@@ -5,7 +5,7 @@ import { get, ref, update } from 'firebase/database'
 
 type ReportItem = {
   id: string
-  status?: 'submitted' | 'pending' | 'success' | 'failed'
+  status?: 'submitted' | 'pending' | 'resolved' | 'dismissed'
   [key: string]: any
 }
 
@@ -34,7 +34,7 @@ export default function ReportVerification() {
     return String(value)
   }
 
-  const updateReportStatus = async (reportId: string, newStatus: 'submitted' | 'pending' | 'success' | 'failed') => {
+  const updateReportStatus = async (reportId: string, newStatus: 'submitted' | 'pending' | 'resolved' | 'dismissed') => {
     try {
       setUpdatingStatus(reportId)
       await update(ref(db, `Report/${reportId}`), { status: newStatus })
@@ -59,9 +59,9 @@ export default function ReportVerification() {
         return '#2B3381' // dark blue-purple
       case 'pending':
         return '#ff9500' // orange
-      case 'success':
+      case 'resolved':
         return '#00b371' // green
-      case 'failed':
+      case 'dismissed':
         return '#ff6b6b' // red
       default:
         return '#6b7280' // gray
@@ -408,8 +408,8 @@ export default function ReportVerification() {
                         >
                           <option value="submitted">Submitted</option>
                           <option value="pending">Pending</option>
-                          <option value="success">Success</option>
-                          <option value="failed">Failed</option>
+                          <option value="resolved">Resolved</option>
+                          <option value="dismissed">Dismissed</option>
                         </select>
                       </div>
 
